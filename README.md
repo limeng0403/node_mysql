@@ -13,6 +13,8 @@ PUT：修改操作
 POST：增加操作
 DELETE：删除操作
 
+test_task.sql：数据库表结构，请自行导入到本地数据库服务。
+
 ### 安装
 
 - 下载官方NodeJS 6.x版本
@@ -22,3 +24,4 @@ DELETE：删除操作
 - `node app.js`
 - `http://localhost:3000`为接口服务地址
 - `http://localhost:3001`为项目演示地址
+
