@@ -23,7 +23,16 @@
                         <input type="text" class="am-form-field" ng-model="i.title" ng-disabled="!i.isEdit" />
                     </td>
                     <td>
-                        <input type="text" class="am-form-field" ng-model="i.finished" ng-disabled="!i.isEdit" />
+                        <div class="am-radio-inline">
+                            <label>
+                                <input type="radio" name="is-finished-{{i.id}}" ng-model="i.finished" value="0" ng-disabled="!i.isEdit"> Prepare
+                            </label>
+                        </div>
+                        <div class="am-radio-inline">
+                            <label>
+                                <input type="radio" name="is-finished-{{i.id}}" ng-model="i.finished" value="1" ng-disabled="!i.isEdit"> Finished
+                            </label>
+                        </div>
                     </td>
                     <td ng-bind="i.create_time | date:'short'"></td>
                     <td ng-bind="i.update_time | date:'short'"></td>
