@@ -1,6 +1,8 @@
 ## nodejs+mysql+REST API项目
 
-![](https://img.shields.io/badge/AngularJS-1.x-red.svg)![](https://img.shields.io/badge/NodeJS-6.x-green.svg)![](https://img.shields.io/badge/MySQL-5.x-orange.svg)
+![](https://img.shields.io/badge/AngularJS-1.x-red.svg)
+![](https://img.shields.io/badge/NodeJS-6.x-green.svg)
+![](https://img.shields.io/badge/MySQL-5.x-orange.svg)
 
 > 此项目实现了数据库的常规操作，增删改查，并且尽可能的使用REST API标准。
 
