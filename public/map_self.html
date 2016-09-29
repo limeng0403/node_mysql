@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+    body,
+    html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        font-family: "微软雅黑";
+    }
+    
+    #allmap {
+        width: 100%;
+        height: 500px;
+    }
+    
+    p {
+        margin-left: 5px;
+        font-size: 14px;
+    }
+    </style>
+    <title>圆形区域搜索</title>
+</head>
+
+<body>
+    <div id="allmap"></div>
+    <div id="list"></div>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=DSi5WZHiPbVYoxNkNe3vGy2z&s=1&callback=initialize"></script>
+    <script type="text/json" src="https://api.map.baidu.com/highacciploc/v1"></script>
+    <script type="text/javascript">
+    var map = {};
+    var point = {};
+
+    function initialize() {
+        map = new BMap.Map('allmap');
+
+        var p1 = function() {
+            return new Promise(function(resolve, reject) {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(resolve);
+                } else {
+                    reject('Geolocation is not supported by this browser.');
+                }
+            });
+        }
+
+        var p2 = function(location) {
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://api.map.baidu.com/geoconv/v1/',
+                    data: {
+                        ak: 'DSi5WZHiPbVYoxNkNe3vGy2z',
+                        coords: location.coords.longitude + ',' + location.coords.latitude
+                    },
+                    dataType: 'JSONP',
+                    success: function(req) {
+                        console.log(req);
+
+                        var location = req.result[0];
+
+                        point = new BMap.Point(location.x, location.y);
+
+                        resolve(point);
+                    },
+                    error: function(err) {
+                        reject(err);
+                    }
+                });
+
+            });
+        }
+
+        p1()
+            .then(p2)
+            .then(function(point) {
+                var marker = new BMap.Marker(point);
+
+                map.enableScrollWheelZoom();
+                map.centerAndZoom(point, 22);
+                map.addOverlay(marker);
+                map.addEventListener('addoverlay', function(type, target) {
+                    var icon = new BMap.Icon('imgs/fox.png', new BMap.Size(32, 32));
+                    try {
+                        type.target.setIcon(icon);
+                    } catch (e) {
+                        console.log(type);
+                    }
+
+                    //console.log('type:', type, 'target:', target);
+                });
+
+                var local = new BMap.LocalSearch(map, {
+                    renderOptions: {
+                        map: map,
+                        panel: 'list',
+                        selectFirstResult: false,
+                        autoViewport: true
+                    },
+                    onMarkersSet: function(pois) {
+                        console.log('onMarkersSet:', pois);
+                    },
+                    onInfoHtmlSet: function(pois) {
+                        console.log('onInfoHtmlSet:', pois);
+                    },
+                    onResultsHtmlSet: function(html) {
+                        console.log('onResultsHtmlSet:', html);
+                    },
+                    onSearchComplete: function(result) {
+                        console.log('onSearchComplete:', result);
+                    }
+                });
+
+                local.searchNearby(['超市', '饭店'], point, 1000);
+
+            })
+            .catch(function(err) {
+                console.log('err:', err);
+            });
+
+    }
+    </script>
+</body>
+
+</html>
